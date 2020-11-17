@@ -13,6 +13,42 @@ Go into the `tests\speed` and `tests\balance` directories, run make, run the pyt
 ### System Requirements
 This implementation makes use of the `CRC32` CPU instruction of the *Streaming SIMD Extensions 4 (SSE4)*. You can replace it in `misc/crc32c_sse42_u64.h`. 
 
-# Other implementations
+## Other implementations
 
 ...
+
+# Algorithm
+```
+INITANCHOR(a,w)
+  A[b]←0 for b= 0,1,...,a−1     // W_b←0 for b∈A
+  R←∅                           // Empty stack
+  N←w                           // Number of initially working buckets
+  K[b]←L[b]←W[b]←b for b= 0,1,...,a−1
+  for b=a−1 downtow do          // Remove initially unused buckets
+    R.push(b)
+    A[b]←b
+    
+GETBUCKET(k)
+  b←hash(k) mod a
+  while A[b]>0 do               // b is removed
+    h←h_b(k)                    // h←hash(b,k) mod A[b]
+    while A[h]≥A[b] do          // W_b[h] != h, b removed prior to h
+      h←K[h]                    // search for W_b[h]
+      b←h                       // b←H_W_b(k)
+    return b
+
+ADDBUCKET( )
+  b←R.pop()
+  A[b]←0                        // W←W ∪ {b}, delete W_b
+  L[W[N]]←N
+  W[L[b]]←K[b]←b
+  N←N+ 1
+  return b
+  
+REMOVEBUCKET(b)
+  R.push(b)
+  N←N−1
+  A[b]←N                       // W_b←W\b, A[b]←|W_b|
+  W[L[b]]←K[b]←W[N]
+  L[W[N]]←L[b]
+```
