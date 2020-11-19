@@ -15,27 +15,61 @@ This implementation makes use of the `CRC32` CPU instruction of the *Streaming S
 
 ## Other implementations
 
-...
+### Go
+
+- https://github.com/OmerBenHayun/go-anchorhash
+- https://github.com/wdamron/go-anchorhash
+
+# Notes
+
+* In a distributed system, must maintain consensus on the ordering of changes to the working set and on the seed for key hashing (digest)
+
+* Hash functions must be independent for differenet values of k and b
+
 
 # Algorithm
+
+```hs
+INITWRAPPER(A,S)
+  M←∅, W←∅
+  for i∈(0,1,...,|S|−1) do 
+    M←M∪{(A[i],S[i])}
+    W←W∪{A[i]}
+  INITANCHOR(A,W)
+
+GETRESOURCE(k)                  // compute resource for key k 
+  b←GETBUCKET(hash(k))          // convert key to int (e.g., rand(seed=k)) and call anchorHash
+  ξ←M(b)
+  return ξ
+  
+ADDRESOURCE(ξ)
+  b←ADDBUCKET( )
+  M←M∪{(b,ξ)}
+  
+REMOVERESOURCE(ξ)
+  b←INV_M(ξ)
+  M←M\{(b,ξ)}
+  REMOVEBUCKET(b)
 ```
+
+```hs
 INITANCHOR(a,w)
-  A[b]←0 for b= 0,1,...,a−1     // W_b←0 for b∈A
-  R←∅                           // Empty stack
-  N←w                           // Number of initially working buckets
-  K[b]←L[b]←W[b]←b for b= 0,1,...,a−1
-  for b=a−1 downtow do          // Remove initially unused buckets
+  A[b]←0 for b=0,1,...,a−1     // W_b←0 for b∈A
+  R←∅                           // empty stack
+  N←w                           // mumber of initially working buckets
+  K[b]←L[b]←W[b]←b for b=0,1,...,a−1
+  for b=a−1 downtow do          // remove initially unused buckets
     R.push(b)
     A[b]←b
     
 GETBUCKET(k)
-  b←hash(k) mod a
+  b←hash(k) mod a               // can use k if calling through wrapper at it is already hash(key)
   while A[b]>0 do               // b is removed
-    h←h_b(k)                    // h←hash(b,k) mod A[b]
+    h←h_b(k)                    // h←hash(b,k) mod A[b] OR k←rand(seed=k), h←k mod A[b]
     while A[h]≥A[b] do          // W_b[h] != h, b removed prior to h
       h←K[h]                    // search for W_b[h]
       b←h                       // b←H_W_b(k)
-    return b
+  return b
 
 ADDBUCKET( )
   b←R.pop()
