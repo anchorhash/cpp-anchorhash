@@ -67,7 +67,7 @@ INITANCHOR(a,w)
     A[b]←b
     
 GETBUCKET(k)
-  b←hash(k) mod a               // can use k if calling through wrapper at it is already hash(key)
+  b←hash(k) mod a               // can use k if calling through wrapper as it is already hash(key)
   while A[b]>0 do               // b is removed
     h←h_b(k)                    // h←hash(b,k) mod A[b] OR k←rand(seed=k), h←k mod A[b]
     while A[h]≥A[b] do          // W_b[h] != h, b removed prior to h
