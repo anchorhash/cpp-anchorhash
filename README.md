@@ -34,12 +34,11 @@ This implementation makes use of the `CRC32` CPU instruction of the *Streaming S
 # Algorithm
 
 ```hs
-INITWRAPPER(A,S)
-  M←∅, W←∅
+INITWRAPPER(a,S)                // a anchor capacity, S list of resources, a>=|S|
+  M←∅
   for i∈(0,1,...,|S|−1) do 
-    M←M∪{(A[i],S[i])}
-    W←W∪{A[i]}
-  INITANCHOR(A,W)
+    M←M∪{(i,S[i])}              // mapping from bucket to resource
+  INITANCHOR(a,|S|)
 
 GETRESOURCE(k)                  // compute resource for key k 
   b←GETBUCKET(hash(k))          // convert key to int (e.g., rand(seed=k)) and call anchorHash
@@ -57,8 +56,8 @@ REMOVERESOURCE(ξ)
 ```
 
 ```hs
-INITANCHOR(a,w)
-  A[b]←0 for b=0,1,...,a−1     // W_b←0 for b∈A
+INITANCHOR(a,w)                 // a anchor size (capacity), w number of workers (size) 
+  A[b]←0 for b=0,1,...,a−1      // W_b←0 for b∈A
   R←∅                           // empty stack
   N←w                           // mumber of initially working buckets
   K[b]←L[b]←W[b]←b for b=0,1,...,a−1
@@ -86,7 +85,7 @@ ADDBUCKET( )
 REMOVEBUCKET(b)
   R.push(b)
   N←N−1
-  A[b]←N                       // W_b←W\b, A[b]←|W_b|
+  A[b]←N                        // W_b←W\b, A[b]←|W_b|
   W[L[b]]←K[b]←W[N]
   L[W[N]]←L[b]
 ```
