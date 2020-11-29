@@ -17,8 +17,12 @@ This implementation makes use of the `CRC32` CPU instruction of the *Streaming S
 
 ### Go
 
+- https://github.com/anchorhash/go-anchorhash
 - https://github.com/OmerBenHayun/go-anchorhash
 - https://github.com/wdamron/go-anchorhash
+
+### Python
+- https://github.com/anchorhash/py-anchorhash
 
 # Notes
 
