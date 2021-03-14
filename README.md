@@ -71,7 +71,7 @@ GETBUCKET(k)
     h←h_b(k)                    // h←hash(b,k) mod A[b] OR k←rand(seed=k), h←k mod A[b]
     while A[h]≥A[b] do          // W_b[h] != h, b removed prior to h
       h←K[h]                    // search for W_b[h]
-      b←h                       // b←H_W_b(k)
+    b←h                         // b←H_W_b(k)
   return b
 
 ADDBUCKET( )
