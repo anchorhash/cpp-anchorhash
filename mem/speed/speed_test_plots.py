@@ -2,19 +2,19 @@
 
 import matplotlib.pyplot as plt
 import math
-	
-def read_anchor_res(fn):	
 
-	with open(fn) as fp:  
-	   anchor_lines = fp.readlines()
-	  
-	achor_res = [x.split() for x in anchor_lines]
-	
-	achor_num_buckets = [float(i[4]) for i in achor_res]
-	achor_rates = [float(i[8]) for i in achor_res]	
+def read_anchor_res(fn):
 
-	return (achor_num_buckets, achor_rates)
-			
+    with open(fn) as fp:
+       anchor_lines = fp.readlines()
+
+    achor_res = [x.split() for x in anchor_lines]
+
+    achor_num_buckets = [float(i[4])-float(i[6]) for i in achor_res]
+    achor_rates = [float(i[8]) for i in achor_res]
+
+    return (achor_num_buckets, achor_rates)
+
 buckets1, rates1 = read_anchor_res("anchor_0.txt")
 buckets2, rates2 = read_anchor_res("anchor_10.txt")
 buckets3, rates3 = read_anchor_res("anchor_100.txt")
@@ -30,5 +30,6 @@ plt.semilogx(buckets5, rates5, label= 'AnchorHash 10000%')
 plt.xlabel('Number of buckets')
 plt.ylabel('Rate [Mkps]')
 plt.legend()
+plt.grid(which='major', axis='both', linestyle=':', linewidth=0.5)
 plt.savefig("speed.pdf")
 plt.show()
