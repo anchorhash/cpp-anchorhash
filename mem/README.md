@@ -42,7 +42,7 @@ INITANCHOR(a,w)                 // a anchor size (capacity), w number of workers
     R.push(b)
     A[b]←b
 
-BUCKETATVIEW(b,v)
+BUCKETATVIEW(b,v)               // find who replaced b at view size v
   while A[b]>=v do              // b is removed for view size v
     b←K(b)                      // search for W_v[b]
   return b
